@@ -2,12 +2,12 @@
   <div class="qrcode-reader-demo">
     <qrcode-reader
       :paused="paused"
-      @capture="onCapture"
+      @decode="onDecode"
       @no-support="onError"
       @stream-loaded="onStreamLoaded"
       @permission-deny="onError">
 
-      <div class="module" v-for="module in modules" :style="styleOf(module)"></div>
+      <div class="corner" v-for="corner in corners" :style="positionOf(corner)"></div>
 
       <div class="content">{{ content }}</div>
 
@@ -34,8 +34,9 @@ export default {
 
   data () {
     return {
-      modules: [],
+      corners: [],
       content: 'STREAM LOADING...',
+
       errors: [],
       paused: false,
       pauseOnCapture: true
@@ -43,16 +44,21 @@ export default {
   },
 
   methods: {
-    onCapture (capture) {
-      if (capture === null) {
-        this.modules = []
+    onDecode ({ content, location }) {
+      if (location === null) {
+        this.corners = []
       } else {
-        this.modules = capture.points
-        this.content = capture.result
+        this.corners = [
+          location.bottomLeft,
+          location.topLeft,
+          location.topRight
+        ]
+      }
 
-        if (this.pauseOnCapture) {
-          this.paused = true
-        }
+      this.content = content || ''
+
+      if (content !== null && this.pauseOnCapture) {
+        this.paused = true
       }
     },
 
@@ -64,12 +70,10 @@ export default {
       this.content = ''
     },
 
-    styleOf ({ X, Y, estimatedModuleSize }) {
+    positionOf ({ x, y }) {
       return {
-        'top': Y + 'px',
-        'left': X + 'px',
-        'width': estimatedModuleSize + 'px',
-        'height': estimatedModuleSize + 'px'
+        'top': y + 'px',
+        'left': x + 'px'
       }
     },
 
@@ -86,13 +90,15 @@ export default {
 
 <style lang="scss">
 .qrcode-reader-demo {
-  .module {
+  .corner {
     position: absolute;
 
     background-color: red;
     border-radius: 50%;
-    min-width: 5px;
-    min-height: 5px;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    margin-top: -5px;
 
     transition: all 40ms;
   }
