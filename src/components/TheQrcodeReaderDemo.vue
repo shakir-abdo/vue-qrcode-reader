@@ -1,27 +1,26 @@
 <template>
-  <div class="qrcode-reader-demo">
+  <div class="qrcode-reader-demo container">
+    <div v-for="error in errors" class="error">
+      {{ error }}
+    </div>
+
     <qrcode-reader
       :paused="paused"
       @decode="onDecode"
+      @locate="onLocate"
       @no-support="onError"
       @stream-loaded="onStreamLoaded"
       @permission-deny="onError">
 
-      <div class="corner" v-for="corner in corners" :style="positionOf(corner)"></div>
-
+      <div class="point" v-for="point in points" :style="positionOf(point)"></div>
       <div class="content">{{ content }}</div>
+      <div class="controls">
+        <button type="button" class="btn btn-primary btn-sm" @click="togglePauseOnCapture">
+          {{ pauseOnCapture ? 'Scan Continuously' : 'Pause On Capture' }}
+        </button>
+      </div>
 
     </qrcode-reader>
-
-    <div>
-      <button type="button" class="btn btn-primary btn-sm" @click="togglePauseOnCapture">
-        {{ pauseOnCapture ? 'Scan Continuously' : 'Pause On Capture' }}
-      </button>
-    </div>
-
-    <div v-for="error in errors" class="error">
-      {{ error }}
-    </div>
   </div>
 </template>
 
@@ -34,7 +33,7 @@ export default {
 
   data () {
     return {
-      corners: [],
+      points: [],
       content: 'STREAM LOADING...',
 
       errors: [],
@@ -44,22 +43,16 @@ export default {
   },
 
   methods: {
-    onDecode ({ content, location }) {
-      if (location === null) {
-        this.corners = []
-      } else {
-        this.corners = [
-          location.bottomLeft,
-          location.topLeft,
-          location.topRight
-        ]
-      }
+    onDecode (content) {
+      this.content = content
 
-      this.content = content || ''
-
-      if (content !== null && this.pauseOnCapture) {
+      if (this.pauseOnCapture) {
         this.paused = true
       }
+    },
+
+    onLocate (points) {
+      this.points = points
     },
 
     onError (message) {
@@ -90,7 +83,9 @@ export default {
 
 <style lang="scss">
 .qrcode-reader-demo {
-  .corner {
+  padding: 0px;
+
+  .point {
     position: absolute;
 
     background-color: red;
@@ -104,11 +99,20 @@ export default {
   }
 
   .content {
-    padding: 0px 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: 0px 20px;
     color: #fff;
     font-weight: bold;
     padding: 10px;
     background-color: rgba(0,0,0,.5);
+  }
+
+  .controls {
+    margin-top: 40px;
   }
 
   .error {
