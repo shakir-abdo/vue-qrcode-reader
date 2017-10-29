@@ -1,16 +1,10 @@
 <template>
   <div class="qrcode-reader-demo container">
-    <div v-for="error in errors" class="error">
-      {{ error }}
-    </div>
-
     <qrcode-reader
       :paused="paused"
       @decode="onDecode"
       @locate="onLocate"
-      @no-support="onError"
-      @stream-loaded="onStreamLoaded"
-      @permission-deny="onError">
+      @init="onInit">
 
       <div class="point" v-for="point in points" :style="positionOf(point)"></div>
       <div class="content">{{ content }}</div>
@@ -34,9 +28,8 @@ export default {
   data () {
     return {
       points: [],
-      content: 'STREAM LOADING...',
+      content: '',
 
-      errors: [],
       paused: false,
       pauseOnCapture: true
     }
@@ -55,12 +48,20 @@ export default {
       this.points = points
     },
 
-    onError (message) {
-      this.errors.push(message)
-    },
+    async onInit (promise) {
+      this.content = 'STREAM LOADING...'
 
-    onStreamLoaded () {
-      this.content = ''
+      try {
+        this.content = ''
+      } catch (e) {
+        console.error(e)
+
+        if (e.name === 'NotAllowedError') {
+          this.content = 'To scan QR codes this component needs to access your camera.'
+        } else {
+          this.content = e.message
+        }
+      }
     },
 
     positionOf ({ x, y }) {
