@@ -8,7 +8,9 @@
     "dev": "node build/dev-server.js",
     "start": "npm run dev",
     "build": "node build/build.js",
-    "build-docs": "node ./node_modules/vue-gh-pages/index.js",
+    "github-pagify": "node ./node_modules/vue-gh-pages/index.js",
+    "move-build": "rm -r ../static ../index.html; mv ./docs/* ..; rm -r ./docs",
+    "full-build": "npm run github-pagify; npm run move-build",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
