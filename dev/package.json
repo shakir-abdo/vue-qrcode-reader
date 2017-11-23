@@ -16,8 +16,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "vue": "^2.5.2",
-    "vue-qrcode-reader": "^0.6.0",
-    "webrtc-adapter": "^5.0.6"
+    "vue-qrcode-reader": "^0.6.4"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
