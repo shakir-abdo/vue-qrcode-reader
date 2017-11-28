@@ -117,7 +117,7 @@ export default {
 <style lang="scss">
 @import "~bootstrap/scss/bootstrap.scss";
 
-.ignore-padding {
-  margin: 0px -15px;
+#app {
+  padding-bottom: 15px;
 }
 </style>
