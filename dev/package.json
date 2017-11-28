@@ -16,7 +16,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "vue": "^2.5.2",
-    "vue-qrcode-reader": "^0.6.4"
+    "vue-qrcode-reader": "^0.6.5"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

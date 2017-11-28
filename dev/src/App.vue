@@ -4,7 +4,7 @@
       <div class="container">
         <h1 class="display-3">Vue QR code reader</h1>
         <p class="lead">
-          A Vue.js 2 component, accessing the device camera and allowing users to read QR codes, right from your web app.
+          A Vue.js 2 component which detects and decodes QR codes from a camera stream. No need for native apps.
         </p>
         <hr />
         <p class="lead">
@@ -44,7 +44,15 @@
 
       <hr />
 
-      <Component :is="selectedDemo" />
+      <div v-for="error in errors" class="alert alert-danger" role="alert">
+        {{ error }}
+
+        <button type="button" class="close" aria-label="Close" @click="closeError(error)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <Component :is="selectedDemo" @error="openError" />
     </div>
   </div>
 </template>
@@ -73,7 +81,8 @@ export default {
 
     return {
       selectedDemo: demos[0].component,
-      demos
+      demos,
+      errors: []
     }
   },
 
@@ -81,6 +90,26 @@ export default {
     TheTrackLocationDemo,
     TheDecodeAllDemo,
     TheFirstResultDemo
+  },
+
+  watch: {
+    'selectedDemo': 'clearErrors'
+  },
+
+  methods: {
+    openError (error) {
+      this.errors.push(error)
+    },
+
+    closeError (error) {
+      const index = this.errors.indexOf(error)
+
+      this.errors.splice(index, 1)
+    },
+
+    clearErrors () {
+      this.errors = []
+    }
   }
 }
 </script>
