@@ -2,11 +2,7 @@
   <QrcodeReader
     @locate="onLocate"
     @init="onInit">
-    <div
-      v-for="point in points"
-      :style="positionOf(point)"
-      class="point"
-    ></div>
+    <canvas ref="canvas" class="points"></canvas>
 
     <LoadingIndicator v-show="loading" />
   </QrcodeReader>
@@ -15,6 +11,7 @@
 <script>
 import { QrcodeReader } from 'vue-qrcode-reader'
 import InitHandler from '@/mixins/InitHandler'
+import debounce from 'lodash/debounce'
 
 export default {
   components: { QrcodeReader },
@@ -27,32 +24,49 @@ export default {
     }
   },
 
+  watch: {
+    points (newPoints, oldPoints) {
+      const canvas = this.$refs.canvas
+      const ctx = canvas.getContext('2d')
+
+      window.requestAnimationFrame(() => {
+        canvas.width = canvas.offsetWidth
+        canvas.height = canvas.offsetHeight
+
+        oldPoints.forEach(({ x, y }) => {
+          ctx.clearRect(x, y, 10, 10)
+        })
+
+        ctx.fillStyle = 'red'
+
+        newPoints.forEach(({ x, y }) => {
+          ctx.fillRect(x, y, 10, 10)
+        })
+      })
+    }
+  },
+
   methods: {
     onLocate (points) {
-      this.points = points
+      if (points.length > 0) {
+        this.points = points
+      } else {
+        this.clearPoints()
+      }
     },
 
-    positionOf ({ x, y }) {
-      return {
-        'top': y + 'px',
-        'left': x + 'px'
-      }
-    }
+    // avoid flickering when value changes quickly
+    clearPoints: debounce(function () {
+      this.points = []
+    }, 100)
   }
 }
 </script>
 
 <style scoped>
-.point {
+.points {
   position: absolute;
-
-  background-color: red;
-  border-radius: 50%;
-  width: 10px;
-  height: 10px;
-  margin-left: -5px;
-  margin-top: -5px;
-
-  transition: all 40ms;
+  width: 100%;
+  height: 100%;
 }
 </style>
