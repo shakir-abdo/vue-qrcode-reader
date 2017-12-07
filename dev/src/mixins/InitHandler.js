@@ -15,6 +15,8 @@ export default {
 
       try {
         await promise
+
+        this.$emit('success')
       } catch (error) {
         if (error.name === 'NotAllowedError') {
           this.$emit('error', 'To detect and decode QR codes this page needs access to your camera')
@@ -24,8 +26,12 @@ export default {
           this.$emit('error', 'Seems like this page is served in non-secure context. Your browser doesn\'t support that')
         } else if (error.name === 'NotReadableError') {
           this.$emit('error', 'Couldn\'t access your camera. Is it already in use?')
+        } else if (error.name === 'OverconstrainedError') {
+          this.$emit('error', 'Constraints don\'t match any installed camera. Did you asked for the front camera although there is none?')
         } else {
-          this.$emit('error', error.message)
+          this.$emit('error', 'UNKNOWN ERROR: ' + error.message)
+
+          console.error(error)
         }
       } finally {
         this.loading = false

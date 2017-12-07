@@ -43,7 +43,6 @@ export default {
   right: 0;
   max-width: 100%;
 
-  padding: 0px 20px;
   color: #fff;
   font-weight: bold;
   padding: 10px;

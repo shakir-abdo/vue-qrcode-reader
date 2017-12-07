@@ -12,7 +12,7 @@
             class="btn btn-primary btn-lg"
             href="https://github.com/gruhn/vue-qrcode-reader"
             role="button">
-            View on GitHub
+            <i class="fa fa-github"></i> View on GitHub
           </a>
         </p>
       </div>
@@ -52,7 +52,7 @@
         </button>
       </div>
 
-      <Component :is="selectedDemo" @error="openError" />
+      <Component :is="selectedDemo" @error="openError" @success="clearErrors" />
     </div>
   </div>
 </template>
@@ -61,6 +61,8 @@
 import TheTrackLocationDemo from '@/components/demos/TheTrackLocationDemo'
 import TheDecodeAllDemo from '@/components/demos/TheDecodeAllDemo'
 import TheFirstResultDemo from '@/components/demos/TheFirstResultDemo'
+import TheValidateDemo from '@/components/demos/TheValidateDemo'
+import TheSwitchCameraDemo from '@/components/demos/TheSwitchCameraDemo'
 
 export default {
   name: 'app',
@@ -76,6 +78,12 @@ export default {
       }, {
         title: 'Track location',
         component: 'TheTrackLocationDemo'
+      }, {
+        title: 'Validate',
+        component: 'TheValidateDemo'
+      }, {
+        title: 'Switch Camera',
+        component: 'TheSwitchCameraDemo'
       }
     ]
 
@@ -89,7 +97,9 @@ export default {
   components: {
     TheTrackLocationDemo,
     TheDecodeAllDemo,
-    TheFirstResultDemo
+    TheFirstResultDemo,
+    TheValidateDemo,
+    TheSwitchCameraDemo
   },
 
   watch: {
