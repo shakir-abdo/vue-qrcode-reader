@@ -34,13 +34,13 @@ export default {
         canvas.height = canvas.offsetHeight
 
         oldPoints.forEach(({ x, y }) => {
-          ctx.clearRect(x, y, 10, 10)
+          ctx.clearRect(x - 5, y - 5, 10, 10)
         })
 
-        ctx.fillStyle = 'red'
+        ctx.fillStyle = '#007bff'
 
         newPoints.forEach(({ x, y }) => {
-          ctx.fillRect(x, y, 10, 10)
+          ctx.fillRect(x - 5, y - 5, 10, 10)
         })
       })
     }

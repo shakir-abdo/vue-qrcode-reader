@@ -4,18 +4,20 @@
     @decode="onDecode"
     @init="onInit">
     <div v-show="paused" class="validation-layer">
-      {{ content }}
+      <div class="decode-result">{{ content }}</div>
 
-      <div v-if="validating">
-        Long validation in progress...
-      </div>
+      <div class="validation-notice">
+        <div v-if="validating">
+          Long validation in progress...
+        </div>
 
-      <div v-else-if="isValid">
-        A URL!!!
-      </div>
+        <div v-else-if="isValid" class="text-success">
+          A URL!!!
+        </div>
 
-      <div v-else>
-        Not a URL!
+        <div v-else class="text-danger">
+          Not a URL!
+        </div>
       </div>
     </div>
 
@@ -66,10 +68,24 @@ export default {
   width: 100%;
   height: 100%;
 
-  background-color: rgba(0,0,0,.5);
-  color: #fff;
-  font-weight: bold;
+  background-color: rgba(255, 255, 255, .9);
   text-align: center;
   padding: 10px;
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+
+.validation-notice {
+  font-weight: bold;
+  font-size: 1.4rem;
+}
+
+.decode-result {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
 }
 </style>
