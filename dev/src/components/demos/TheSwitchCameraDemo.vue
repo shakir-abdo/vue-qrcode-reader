@@ -1,6 +1,6 @@
 <template>
   <QrcodeReader
-    :constraints="constraints"
+    :video-constraints="videoConstraints"
     @init="onInit">
     <button class="btn btn-secondary btn-lg switch-button" @click="switchCamera">
       <i class="fa fa-camera"></i> Switch
@@ -26,18 +26,14 @@ export default {
   },
 
   computed: {
-    constraints () {
+    videoConstraints () {
       if (this.useRearCamera) {
         return {
-          video: {
-            facingMode: { ideal: 'environment' }
-          }
+          facingMode: { ideal: 'environment' }
         }
       } else {
         return {
-          video: {
-            facingMode: { exact: 'user' }
-          }
+          facingMode: { exact: 'user' }
         }
       }
     }

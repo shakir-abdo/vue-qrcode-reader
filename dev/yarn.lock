@@ -5122,9 +5122,9 @@ vue-loader@^13.3.0:
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.6.0"
 
-vue-qrcode-reader@^0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/vue-qrcode-reader/-/vue-qrcode-reader-0.6.6.tgz#d8bd5d30b2db4c479f1a4970bcd051f3b4f37ffe"
+vue-qrcode-reader@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/vue-qrcode-reader/-/vue-qrcode-reader-0.7.0.tgz#4afcbe97625c391f8bc9a132db268baf24ca6bc8"
   dependencies:
     babel-runtime "^6.26.0"
     jsqr "^0.2.2"
