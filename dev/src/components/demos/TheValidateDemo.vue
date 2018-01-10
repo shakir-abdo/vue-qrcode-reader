@@ -4,7 +4,9 @@
     @decode="onDecode"
     @init="onInit">
     <div v-show="paused" class="validation-layer">
-      <div class="decode-result">{{ content }}</div>
+      <div class="decode-result">
+        <u>Decoded</u>: {{ content }}
+      </div>
 
       <div class="validation-notice">
         <div v-if="validating">
@@ -12,11 +14,11 @@
         </div>
 
         <div v-else-if="isValid" class="text-success">
-          A URL!!!
+          This is a URL
         </div>
 
         <div v-else class="text-danger">
-          Not a URL!
+          This is NOT a URL!
         </div>
       </div>
     </div>
