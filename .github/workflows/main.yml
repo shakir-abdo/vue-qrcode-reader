@@ -1,31 +1,39 @@
 name: Release
+
 on:
   push:
     branches:
       - master
+
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 18
+          cache: npm
       - name: Install & Build
+        env: 
+          VITEPRESS_BASE: /vue-qrcode-reader/
         run: |
           npm ci
+          npm run type-check
           npm run build
-          npm run build:docs
+          npm run docs:build
       - name: Deploy Docs
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: docs/.vuepress/dist
+          folder: docs/.vitepress/dist
+          clean-exclude: pr-preview
+          force: false
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -9,22 +9,31 @@
   />
 </template>
 
-<script>
-import { processFile } from "../misc/scanner.js";
-import CommonAPI from "../mixins/CommonAPI.vue";
+<script setup lang="ts">
+import { type PropType } from 'vue'
+import { processFile } from '../misc/scanner'
+import { type BarcodeFormat, type DetectedBarcode } from 'barcode-detector/ponyfill'
 
-export default {
-  name: "qrcode-capture",
+export interface QrcodeCaptureProps {
+  formats?: BarcodeFormat[]
+}
 
-  mixins: [CommonAPI],
+const props = withDefaults(defineProps<QrcodeCaptureProps>(), {
+  formats: () => ['qr_code']
+})
 
-  methods: {
-    onChangeInput(event) {
-      const files = [...event.target.files];
-      const resultPromises = files.map(processFile);
+const emit = defineEmits<{
+  (e: 'detect', detectedCodes: DetectedBarcode[]): void
+}>()
 
-      resultPromises.forEach(this.onDetect);
-    }
+// methods
+const onChangeInput = (event: Event) => {
+  if (!(event.target instanceof HTMLInputElement) || !event.target.files) return
+
+  for (const file of Array.from(event.target.files)) {
+    processFile(file, props.formats).then((detectedCodes) => {
+      emit('detect', detectedCodes)
+    })
   }
-};
+}
 </script>

@@ -9,34 +9,54 @@
   </div>
 </template>
 
-<script>
-import { processFile, processUrl } from "../misc/scanner.js";
-import CommonAPI from "../mixins/CommonAPI.vue";
+<script setup lang="ts">
+import { type PropType } from 'vue'
+import { processFile, processUrl } from '../misc/scanner'
+import { type BarcodeFormat, type DetectedBarcode } from 'barcode-detector/ponyfill'
+import type { EmittedError } from '@/misc/errors'
 
-export default {
-  name: "qrcode-drop-zone",
+export interface QrcodeDropZoneProps {
+  formats?: BarcodeFormat[]
+}
 
-  mixins: [CommonAPI],
+const props = withDefaults(defineProps<QrcodeDropZoneProps>(), {
+  formats: () => ['qr_code']
+})
 
-  methods: {
-    onDragOver(isDraggingOver) {
-      this.$emit("dragover", isDraggingOver);
-    },
+const emit = defineEmits<{
+  (e: 'detect', detectedCodes: DetectedBarcode[]): void
+  (e: 'dragover', isDraggingOver: boolean): void
+  (e: 'error', error: EmittedError): void
+}>()
 
-    onDrop({ dataTransfer }) {
-      this.onDragOver(false);
-
-      const droppedFiles = [...dataTransfer.files];
-      const droppedUrl = dataTransfer.getData("text/uri-list");
-
-      droppedFiles.forEach(file => {
-        this.onDetect(processFile(file));
-      });
-
-      if (droppedUrl !== "") {
-        this.onDetect(processUrl(droppedUrl));
-      }
-    }
+// methods
+const onDetect = async (promise: Promise<any>) => {
+  try {
+    const detectedCodes = await promise
+    emit('detect', detectedCodes)
+  } catch (error) {
+    emit('error', error as EmittedError)
   }
-};
+}
+
+const onDragOver = (isDraggingOver: boolean) => {
+  emit('dragover', isDraggingOver)
+}
+
+const onDrop = ({ dataTransfer }: DragEvent) => {
+  if (!dataTransfer) return
+
+  onDragOver(false)
+
+  const droppedFiles = [...Array.from(dataTransfer.files)]
+  const droppedUrl = dataTransfer.getData('text/uri-list')
+
+  droppedFiles.forEach((file: File) => {
+    onDetect(processFile(file, props.formats))
+  })
+
+  if (droppedUrl !== '') {
+    onDetect(processUrl(droppedUrl, props.formats))
+  }
+}
 </script>

@@ -8,11 +8,15 @@ you are not prompted with a file dialog but with your camera.
 So you can directly take the picture to be uploaded.
 Adjust this behavior with the following dropdown:
 
-
 <ClientOnly>
-  <DemoWrapper component="Upload" />
+  <DemoWrapper :component="Upload" />
 </ClientOnly>
+
+<script setup lang="ts">
+import DemoWrapper from '@/components/DemoWrapper.vue'
+import Upload from '@/components/demos/Upload.vue'
+</script>
 
 ### Source
 
-<<< @/docs/.vuepress/components/demos/Upload.vue
+<<< @/.vitepress/components/demos/Upload.vue
